@@ -5,7 +5,11 @@
   <groupId>de.seco</groupId>
   <artifactId>serp</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
+  
+  <build>
+  	<finalName>SERP</finalName>
+  </build>
 
   <name>serp</name>
   <url>http://maven.apache.org</url>
@@ -27,6 +31,14 @@
 	   <artifactId>neo4j</artifactId>
 	   <version>2.0.0-M05</version>
   	</dependency>
+  	
+  	<dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.0.1</version>
+        <scope>provided</scope>
+	</dependency>
+  	
   </dependencies>
   
 </project>
