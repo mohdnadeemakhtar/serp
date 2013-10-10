@@ -1,0 +1,27 @@
+src/
+	main/
+		java/
+			de.seco.serp
+				controller/
+					apiController
+				services/
+					graphDbService
+				utils/
+				Servlet.java (Main)
+				
+				
+	test/
+		...
+
+doc/
+lib/
+config/
+	schema.json	
+web-app/
+	js/
+	css/
+	....
+	WEB-INF/
+		web.xml
+	
+	
