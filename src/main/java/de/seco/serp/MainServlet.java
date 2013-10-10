@@ -11,20 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 public class MainServlet extends HttpServlet {
 
 	protected void route(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println ("route....");
+
 		response.setContentType("text/html;charset=UTF-8");
 		 PrintWriter out = response.getWriter();
 		 
-		 out.write("SERP Test: " + request.getRequestURL() );
+		 out.write("SERP7 Test: " + request.getRequestURL() );
 		 
 		 out.close(); 
 	}
 	
-	 @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    route(request, response);
 	}
 	 
-	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    route(request, response);
 	}
