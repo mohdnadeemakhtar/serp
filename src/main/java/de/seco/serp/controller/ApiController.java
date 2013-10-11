@@ -59,14 +59,14 @@ public class ApiController extends BaseController {
 	
 
 	public void showAllNodes() {
-		GraphDatabaseService graphDB = DataSource.getGraphDB();
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
 		StringBuilder out = new StringBuilder();
-		Transaction tx = graphDB.beginTx();
+		Transaction tx = graphDb.beginTx();
 		
 		try {
 
 			
-			Iterable<Node> iter = GlobalGraphOperations.at(graphDB).getAllNodes();
+			Iterable<Node> iter = GlobalGraphOperations.at(graphDb).getAllNodes();
 			
 	
 			out.append("<ul>");

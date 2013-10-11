@@ -31,7 +31,7 @@ public class SerpDbSchemaDefinition {
 		return instance;
 	}
 	
-	public SerpDbNodeDefinition validateNodeType(String type){
+	public SerpDbNodeDefinition getNodeType(String type){
 		
 		if(this.nodes.containsKey(type)){
 			return this.nodes.get(type);
@@ -50,7 +50,7 @@ public class SerpDbSchemaDefinition {
 	}
 	
 	
-	public Boolean initSchema(){
+	public boolean initSchema(){
 		
 		if(this.initialized){
 			System.out.println("Database schema already initialized.");
@@ -59,7 +59,7 @@ public class SerpDbSchemaDefinition {
 		File schemaFile = new File(PATH_TO_SCHEMA);
 		
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		try {
 			JsonNode rootNode = mapper.readTree(schemaFile);
 			

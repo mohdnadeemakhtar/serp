@@ -21,7 +21,7 @@ public class SerpDbNodeDefinition {
 	}
 	
 	
-	public Boolean validateProperties(HashMap<String,String> properties){
+	public boolean validateProperties(HashMap<String,String> properties){
 		
 		Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator();
 		while ( iterator.hasNext() ){
@@ -40,7 +40,7 @@ public class SerpDbNodeDefinition {
 	}
 	
 	
-	private Boolean addDisplayLabel(JsonNode displayLabelNode){
+	private boolean addDisplayLabel(JsonNode displayLabelNode){
 		if(displayLabelNode != null){
 			this.displayLabel = displayLabelNode.getTextValue();
 		}
@@ -48,7 +48,7 @@ public class SerpDbNodeDefinition {
 		return true;
 	}
 	
-	private Boolean addPropertyDefinitions(JsonNode propertiesRootNode){
+	private boolean addPropertyDefinitions(JsonNode propertiesRootNode){
 		Iterator<Map.Entry<String, JsonNode>> nodeIterator = propertiesRootNode.getFields();
 		while (nodeIterator.hasNext()){
 			Map.Entry<String, JsonNode> propertyWithKey = nodeIterator.next();
@@ -60,7 +60,7 @@ public class SerpDbNodeDefinition {
 	}
 	
 	
-	private Boolean addPropertyToNode(final String key, final SerpDbPropertyDefintion propertyDefinition){
+	private boolean addPropertyToNode(final String key, final SerpDbPropertyDefintion propertyDefinition){
 		Object obj = this.properties.get(key);
 		if (obj != null){
 			System.out.println("Property already exists");
