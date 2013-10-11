@@ -40,7 +40,7 @@ public class SerpDbSchemaDefinition {
 		return null;
 	}
 	
-	public SerpDbRelationshipDefinition validateRelationshipType(String type){
+	public SerpDbRelationshipDefinition getRelationshipType(String type){
 	
 		if(this.relationships.containsKey(type)){
 			return this.relationships.get(type);
