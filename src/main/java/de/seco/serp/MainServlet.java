@@ -16,7 +16,7 @@ public class MainServlet extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		 PrintWriter out = response.getWriter();
 		 
-		 out.write("SERP7 Test: " + request.getRequestURL() );
+		 out.write("SERP9 Test: " + request.getRequestURL() );
 		 
 		 out.close(); 
 	}
