@@ -1,16 +1,16 @@
 {
 	"node-types": {
 		"person":{
-			display_label: "Person",
+			"display_label": "Person",
 					"properties": {
 						"first_name": {
 							"display_label":"first_name",
 							"default":"",
-							"type": String,
-							"required": false
+							"type": "String",
+							"required": "false"
 						},
 						"last_name": {
-							"name":"last_name",
+							"display_label":"last_name",
 							"default":"SDSDSD",
 							"type":"String",
 							"required":"false"
@@ -19,7 +19,7 @@
 			},
 	
 			"skill": {
-				display_label:"Skill",
+				"display_label":"Skill",
 				"properties": {
 					"name": {
 						"display_label":"name",
@@ -36,7 +36,7 @@
 			"display_label":"hat",
 			"node1":"Person",
 			"node2":"Skill",
-			"directed":true,
+			"directed":"true",
 			"properties": {
 				"since_when": {
 						"display_label":"seit",
