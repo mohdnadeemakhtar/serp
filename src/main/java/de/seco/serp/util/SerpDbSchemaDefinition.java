@@ -12,17 +12,42 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class SerpDbSchemaDefinition {
 	
-	HashMap<String, SerpDbNodeDefinition> nodes;
-	HashMap<String, SerpDbRelationshipDefinition> relationships;
-	Boolean initialized;
+	private static final String PATH_TO_SCHEMA = "./config/schema.json";
+	private HashMap<String, SerpDbNodeDefinition> nodes;
+	private HashMap<String, SerpDbRelationshipDefinition> relationships;
+	private boolean initialized;
+	static SerpDbSchemaDefinition instance;
 	
-	public SerpDbSchemaDefinition(){
+	private SerpDbSchemaDefinition(){
 		this.nodes = new HashMap<String, SerpDbNodeDefinition>();
 		this.relationships = new HashMap<String, SerpDbRelationshipDefinition>();
 		this.initialized = false;
 	}
 	
-	private static final String PATH_TO_SCHEMA = "./config/schema.json";
+	static public SerpDbSchemaDefinition getInstance(){
+		if(instance == null){
+			instance = new SerpDbSchemaDefinition();
+		}
+		return instance;
+	}
+	
+	public SerpDbNodeDefinition validateNodeType(String type){
+		
+		if(this.nodes.containsKey(type)){
+			return this.nodes.get(type);
+		}
+		
+		return null;
+	}
+	
+	public SerpDbRelationshipDefinition validateRelationshipType(String type){
+	
+		if(this.relationships.containsKey(type)){
+			return this.relationships.get(type);
+		}
+		
+		return null;
+	}
 	
 	
 	public Boolean initSchema(){
@@ -55,6 +80,9 @@ public class SerpDbSchemaDefinition {
 	}
 	
 	
+	
+	
+	
 	private Boolean addNodes(JsonNode rootNode){
 		Iterator<Map.Entry<String, JsonNode>> nodeIterator = rootNode.getFields();
 		while (nodeIterator.hasNext()){
@@ -76,9 +104,7 @@ public class SerpDbSchemaDefinition {
 		}
 		return true;
 	}
-	
-	
-	
+
 	private Boolean addNodeToSchema(final String key, final SerpDbNodeDefinition nodeDefinition){
 		Object obj = this.nodes.get(key);
 		if (obj != null){
@@ -98,8 +124,8 @@ public class SerpDbSchemaDefinition {
 		return true;
 	}
 	
-	public String toString(){
-		return "\nnodes: "+this.nodes+"\nrelationships:"+this.relationships+"\n"+"initialized:"+this.initialized+"\n";	
-	}
+//	public String toString(){
+//		return "\nnodes: "+this.nodes+"\nrelationships:"+this.relationships+"\n"+"initialized:"+this.initialized+"\n";	
+//	}
 	
 }

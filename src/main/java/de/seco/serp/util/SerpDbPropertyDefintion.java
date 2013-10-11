@@ -36,8 +36,15 @@ public class SerpDbPropertyDefintion {
 		
 	}
 	
-	public String toString(){
-		return "\ndisplayLabel: "+displayLabel+" type:"+type+"\n";
+	public Boolean validateValue(String value){
+//		TODO: validate value with datatype, required ...
+		
+		
+		return true;
 	}
+	
+//	public String toString(){
+//		return "\ndisplayLabel: "+displayLabel+" type:"+type+"\n";
+//	}
 	
 }

@@ -20,6 +20,26 @@ public class SerpDbNodeDefinition {
 		
 	}
 	
+	
+	public Boolean validateProperties(HashMap<String,String> properties){
+		
+		Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator();
+		while ( iterator.hasNext() ){
+			Map.Entry<String, String> keyAndValue = iterator.next();
+			
+			if(!this.properties.containsKey(keyAndValue.getKey())){
+				return false;
+			}
+			SerpDbPropertyDefintion propertyDefinition = this.properties.get(keyAndValue.getKey());
+			if(!propertyDefinition.validateValue(keyAndValue.getValue())){
+				return false;
+			}
+			
+		}
+		return true;
+	}
+	
+	
 	private Boolean addDisplayLabel(JsonNode displayLabelNode){
 		if(displayLabelNode != null){
 			this.displayLabel = displayLabelNode.getTextValue();
@@ -50,8 +70,10 @@ public class SerpDbNodeDefinition {
 		return true;
 	}
 	
-	public String toString(){
-		return "\nnode: displayLabel:"+displayLabel+"\nproperties:"+properties+"\n";
-	}
+	
+	
+//	public String toString(){
+//		return "\nnode: displayLabel:"+displayLabel+"\nproperties:"+properties+"\n";
+//	}
 
 }
