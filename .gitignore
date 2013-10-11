@@ -1,1 +1,8 @@
 target/
+*.class
+
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
