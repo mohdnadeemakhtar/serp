@@ -50,5 +50,8 @@ public class SerpDbNodeDefinition {
 		return true;
 	}
 	
+	public String toString(){
+		return "\nnode: displayLabel:"+displayLabel+"\nproperties:"+properties+"\n";
+	}
 
 }

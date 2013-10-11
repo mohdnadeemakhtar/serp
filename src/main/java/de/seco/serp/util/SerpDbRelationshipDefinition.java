@@ -25,6 +25,15 @@ public class SerpDbRelationshipDefinition {
 		JsonNode node1Node = node.get("node1");
 		JsonNode node2Node = node.get("node2");
 		
+		if(node1Node != null){
+			this.node1 = node1Node.getTextValue();
+		}
+		if(node2Node != null){
+			this.node2 = node2Node.getTextValue();
+		}
+		if(directedNode != null){
+			this.directed = directedNode.getTextValue();
+		}
 		
 	}
 	
@@ -54,5 +63,9 @@ public class SerpDbRelationshipDefinition {
 		}
 		this.properties.put(key, propertyDefinition);
 		return true;
+	}
+	
+	public String toString(){
+		return "\nrelationship: "+this.node1+"--"+this.displayLabel+"--"+this.node2+"\nproperties:"+this.properties+"\n";	
 	}
 }

@@ -40,7 +40,8 @@ public class SerpDbSchemaDefinition {
 			
 			JsonNode nodeRootNode =rootNode.path("node-types");
 			addNodes(nodeRootNode);
-
+			JsonNode relationshipRootNode = rootNode.path("relationship-types");
+			addRelationships(relationshipRootNode);
 			
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
@@ -49,7 +50,7 @@ public class SerpDbSchemaDefinition {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		this.initialized = true;
 		return true;
 	}
 	
@@ -70,7 +71,7 @@ public class SerpDbSchemaDefinition {
 		while (nodeIterator.hasNext()){
 			Map.Entry<String, JsonNode> nodeWithKey = nodeIterator.next();
 			String key = nodeWithKey.getKey();
-			SerpDbRelationshipDefinition nodeDefinition = new SerpDbRelationshipDefinition(nodeWithKey.getValue());
+			SerpDbRelationshipDefinition relationshipDefinition = new SerpDbRelationshipDefinition(nodeWithKey.getValue());
 			addRelationshipToSchema(key, relationshipDefinition);
 		}
 		return true;
@@ -86,6 +87,19 @@ public class SerpDbSchemaDefinition {
 		}
 		this.nodes.put(key, nodeDefinition);
 		return true;
+	}
+	private Boolean addRelationshipToSchema(final String key, final SerpDbRelationshipDefinition relationshipDefinition){
+		Object obj = this.relationships.get(key);
+		if (obj != null){
+			System.out.println("Node-type already exists");
+			return false;
+		}
+		this.relationships.put(key, relationshipDefinition);
+		return true;
+	}
+	
+	public String toString(){
+		return "\nnodes: "+this.nodes+"\nrelationships:"+this.relationships+"\n"+"initialized:"+this.initialized+"\n";	
 	}
 	
 }

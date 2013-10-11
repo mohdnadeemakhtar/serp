@@ -33,11 +33,11 @@ public class SerpDbPropertyDefintion {
 		if(requiredNode != null){
 			this.required = requiredNode.getTextValue();
 		}
-		System.out.println("property definition: "+this.toString());
+		
 	}
 	
 	public String toString(){
-		return "displayLabel: "+displayLabel+" type:"+type;
+		return "\ndisplayLabel: "+displayLabel+" type:"+type+"\n";
 	}
 	
 }
