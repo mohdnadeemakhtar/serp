@@ -4,9 +4,13 @@
 	   <servlet-class>de.seco.serp.MainServlet</servlet-class>
 	</servlet>
 
-
 	<servlet-mapping>
 	   <servlet-name>MainServlet</servlet-name>
 	   <url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	<listener>
+		<listener-class>de.seco.serp.MainServletContextListener</listener-class> 
+	</listener>
+	
 </web-app>
