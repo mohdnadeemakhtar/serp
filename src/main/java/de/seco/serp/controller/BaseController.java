@@ -19,11 +19,12 @@ public class BaseController {
 	public void invoke (final String methodName, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String className = this.getClass().getCanonicalName();
 		Class c = Class.forName(className);
-		Method method = c.getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
+		//Method method = c.getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
+		Method method = c.getMethod(methodName);
 		
 		this.request = request;
 		this.response = response;
-		method.invoke(this, request, response);
+		method.invoke(this);
 	}
 	
 	public boolean renderAsJSON (Object value) throws Exception {
