@@ -68,9 +68,19 @@ serp.view.CreateNodeView = Backbone.View.extend({
 	},
 	
 	onCreateNodeClick: function () {
+		if (this.isSubmitting) {
+			return;
+		}
+		
+		var that = this;
 		var data = this.collectData();
+		this.isSubmitting = true;
 		$.post("/api/createNode", data).done(function () {
 			alert("erstellt");
+		}).fail(function () {
+			alert("Knoten konnte nicht erstellt werden");
+		}).always(function () {
+			that.isSubmitting = false;
 		})
 	},
 	

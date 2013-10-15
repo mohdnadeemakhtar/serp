@@ -6,7 +6,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 public class DataSource {
 
 	private static GraphDatabaseService graphDb;
-	public final static String GRAPH_DB_PATH = "/Users/matthias/SERP-graphdb";
+	public final static String GRAPH_DB_PATH = "/SERP-graphdb"; // "/Users/matthias/SERP-graphdb";
 	
 	public static void initGraphDb () {
 		System.out.println("init graph database " + GRAPH_DB_PATH);

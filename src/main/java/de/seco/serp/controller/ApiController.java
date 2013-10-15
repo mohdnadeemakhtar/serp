@@ -51,6 +51,7 @@ public class ApiController extends BaseController {
 			
 			Node node = (new GraphDBService()).createNode(type, properties);
 			if (node == null) {
+				response.setStatus(400);
 				render("could not create node");
 			}
 			else {
@@ -58,6 +59,7 @@ public class ApiController extends BaseController {
 			}
 		}
 		catch (Exception e) {
+			response.setStatus(400);
 			e.printStackTrace();
 		}
 	}
