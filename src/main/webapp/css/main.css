@@ -50,8 +50,12 @@
 
 
 .create_node {
-	display: table;
+	display: inline-block;
 	padding: 5px;
+}
+
+.create_node_section {
+	display: table;
 }
 
 
@@ -65,6 +69,7 @@
 
 .create_node_row > label {
 	padding-right: 10px; 
+	min-width: 100px;
 }
 
 .create_node_properties {

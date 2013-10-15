@@ -1,6 +1,8 @@
 package de.seco.serp.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,9 @@ import org.neo4j.tooling.GlobalGraphOperations;
 
 import de.seco.serp.DataSource;
 import de.seco.serp.services.GraphDBService;
+import de.seco.serp.util.SerpDbNodeDefinition;
+import de.seco.serp.util.SerpDbPropertyDefinition;
+import de.seco.serp.util.SerpDbSchemaDefinition;
 
 public class ApiController extends BaseController {
 	
@@ -125,6 +130,50 @@ public class ApiController extends BaseController {
 		render (out);
 	}
 	
+	
+	public void getNodeTypeList () {
+		SerpDbSchemaDefinition serpDbDef = SerpDbSchemaDefinition.getInstance();
+		HashMap<String, SerpDbNodeDefinition> nodeDefs = serpDbDef.getNodes();
+		
+		ArrayList< HashMap<String, String> > resultList = new ArrayList<HashMap<String, String> >();
+		
+		for (Map.Entry<String, SerpDbNodeDefinition> nodeDef :  nodeDefs.entrySet()) {
+			
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("name",nodeDef.getKey());
+			map.put("label", nodeDef.getValue().getDisplayLabel());
+			
+			resultList.add(map);
+		}
+		
+		render(resultList, "json");
+		
+	}
+	
+	public void getNodePropertyList () {
+		String nodeType = request.getParameter("nodeType");
+		
+		SerpDbSchemaDefinition serpDbDef = SerpDbSchemaDefinition.getInstance();
+		SerpDbNodeDefinition nodeDef = serpDbDef.getNodeType(nodeType);
+		if (nodeDef == null) {
+			response.setStatus(400);
+			render ("");
+			return;
+		}
+		HashMap<String, SerpDbPropertyDefinition> nodeProperties = nodeDef.getProperties();
+		
+		ArrayList< HashMap<String, String> > resultList = new ArrayList<HashMap<String, String> >();
+		
+		for (Map.Entry<String, SerpDbPropertyDefinition> it : nodeProperties.entrySet()) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("name", it.getKey());
+			map.put("label", it.getValue().getDisplayLabel());
+			resultList.add(map);
+		}
+		
+		render(resultList, "json");
+		
+	}
 	
 	
 

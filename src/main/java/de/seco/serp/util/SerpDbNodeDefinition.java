@@ -133,6 +133,12 @@ public class SerpDbNodeDefinition {
 	public HashMap<String, SerpDbPropertyDefinition> getProperties(){
 		return this.properties;
 	}
+
+
+	public String getDisplayLabel() {
+		// TODO Auto-generated method stub
+		return this.displayLabel;
+	}
 	
 
 }

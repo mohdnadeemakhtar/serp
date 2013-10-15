@@ -95,6 +95,10 @@ public class SerpDbPropertyDefinition {
 		
 		return this.type;
 	}
+
+	public String getDisplayLabel() {
+		return displayLabel;
+	}
 	
 //	public String toString(){
 //		return "\ndisplayLabel: "+displayLabel+" type:"+type+"\n";

@@ -65,6 +65,7 @@ public class BaseController {
         return true;
 	}
 	
+	
 	public boolean render (Object value, String type) {
 		System.out.println("render " + type);
 		try {
