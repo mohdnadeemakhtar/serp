@@ -17,9 +17,9 @@
 						},
 						"age": {
 							"display_label":"age",
-							"type":"Integer",
+							"type":"Integer"
 							
-						}
+						}	
 					}
 			},
 	

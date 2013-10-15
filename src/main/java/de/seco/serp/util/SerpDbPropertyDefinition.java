@@ -15,7 +15,7 @@ public class SerpDbPropertyDefinition {
 		this.displayLabel = null;
 		this.type = null;
 		this.defaultValue = null;
-		this.required = null;
+		this.required = false;
 		
 		JsonNode displayLabelNode = jsonNode.get("display_label");
 		if(displayLabelNode != null){
@@ -34,8 +34,9 @@ public class SerpDbPropertyDefinition {
 		JsonNode defaultValueNode = jsonNode.get("default");
 		if(defaultValueNode != null){
 			this.defaultValue = defaultValueNode.getTextValue();
+			System.out.println("class: "+defaultValueNode.getClass());
 		}
-		System.out.println("class: "+defaultValueNode.getClass());
+		
 		JsonNode requiredNode = jsonNode.get("required");
 		if(requiredNode != null){
 			this.required = requiredNode.getBooleanValue();
@@ -69,7 +70,12 @@ public class SerpDbPropertyDefinition {
 
 	public boolean isRequired() {
 		
-		return required;
+		return this.required;
+	}
+
+	public boolean hasDefault() {
+		// TODO Auto-generated method stub
+		return (this.defaultValue != null);
 	}
 	
 //	public String toString(){

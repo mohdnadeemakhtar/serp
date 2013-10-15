@@ -14,20 +14,26 @@ public class SerpDbNode {
 		this.definition = schemaDefinition.getNodeType(label);
 		if(this.definition == null){
 			System.out.println("No valid node type");
+			
 			return;
 		}
 
+		if(!this.definition.validateProperties(properties)){
+			System.out.println("Property validation failed");
+			return;
+		}
 		this.label = label;
 		this.properties = new HashMap<String, Object>();
 		ArrayList<String> requiredProperties = this.definition.getRequiredProperties();
+		
 		for (Map.Entry<String, String> property : properties.entrySet()) {
 			String key = property.getKey();
 			String value = property.getValue();
-			
 			this.setProperty(key, value);
 			if(requiredProperties.contains(key)){
 				requiredProperties.remove(key);
 			}
+			
 		}
 		
 //		set remaining required properties if they have a default value

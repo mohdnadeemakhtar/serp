@@ -24,6 +24,7 @@ public class SerpDbNodeDefinition {
 	
 	public boolean validateProperties(HashMap<String,String> properties){
 		
+		ArrayList<String> requiredProperties = this.getRequiredProperties();
 		Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator();
 		while ( iterator.hasNext() ){
 			Map.Entry<String, String> keyAndValue = iterator.next();
@@ -31,7 +32,22 @@ public class SerpDbNodeDefinition {
 			if(! this.validateProperty(keyAndValue.getKey(), keyAndValue.getValue())){
 				return false;
 			}
-			
+			if(requiredProperties.contains(keyAndValue.getKey())){
+				requiredProperties.remove(keyAndValue.getKey());
+			}
+		}
+		if(requiredProperties.size() > 0){
+			ArrayList<String> propertiesWithDefaultValue = this.getPropertiesWithDefaultValue();
+		
+			for(String requiredProperty : requiredProperties){
+				if(propertiesWithDefaultValue.contains(requiredProperty)){
+					requiredProperties.remove(requiredProperty);
+				}
+			}
+			if(requiredProperties.size() > 0 ){
+				System.out.println("not all required properties set");
+				return false;
+			}
 		}
 		return true;
 	}
@@ -41,11 +57,11 @@ public class SerpDbNodeDefinition {
 		if(!this.properties.containsKey(key)){
 			return false;
 		}
+		
 		SerpDbPropertyDefinition propertyDefinition = this.properties.get(key);
 		if(!propertyDefinition.validateValue(value)){
 			return false;
 		}
-		
 		
 		return true;
 	}
@@ -102,9 +118,23 @@ public class SerpDbNodeDefinition {
 		return null;
 	}
 	
+	public ArrayList<String> getPropertiesWithDefaultValue() {
+		ArrayList<String> propertiesWithDefaultValue = new ArrayList<String>();
+		for (Map.Entry<String, SerpDbPropertyDefinition> property : this.properties.entrySet()) {
+			String key = property.getKey();
+			SerpDbPropertyDefinition value = property.getValue();
+			if(value.hasDefault()){
+				propertiesWithDefaultValue.add(key);
+			}
+		}
+		return null;
+	}
+	
 	public HashMap<String, SerpDbPropertyDefinition> getProperties(){
 		return this.properties;
 	}
+	
+	
 //	public String toString(){
 //		return "\nnode: displayLabel:"+displayLabel+"\nproperties:"+properties+"\n";
 //	}
