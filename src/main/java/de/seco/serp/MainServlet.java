@@ -8,11 +8,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import de.seco.serp.controller.*;
 
 public class MainServlet extends HttpServlet {
 
+	
+	protected void render_404 (HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("render_404");
+		try {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		} 
+		catch (Exception e) {
+			System.out.println("cannot render 404: " + e.getMessage());
+		}
+	}
+	
 	// route request to controller
 	protected void route(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -22,19 +34,31 @@ public class MainServlet extends HttpServlet {
 		}
 		String[] uriParts = requestUri.split("/");
 		
+
 		BaseController controller = null;
+		String actionName = "";
+		HttpSession session = request.getSession(true);
 		
 		try {
-			String actionName = "";
 			
-			if (uriParts.length < 2) {
-				System.out.println ("non-api: " + requestUri);
-				request.getRequestDispatcher("views/login.jsp").forward(request, response);
-//				PrintWriter out = response.getWriter(); 
-//				out.write("test");
-//				out.close();
-				return;
+			// Landing Page
+			if (uriParts.length == 1) {
+				actionName = uriParts[0];
+				System.out.println("action: '"+actionName+"'");
+				if (actionName.length() == 0) {
+					if (session.getAttribute("userId") == null) {
+						request.getRequestDispatcher("views/login.jsp").forward(request, response);
+					}
+					else {
+						request.getRequestDispatcher("views/main.jsp").forward(request, response);
+					}
+					
+					return;
+				}
+				
+				controller = new AuthController();
 			}
+			
 			else {
 				actionName = uriParts[1];
 				
@@ -43,9 +67,16 @@ public class MainServlet extends HttpServlet {
 					System.out.println("Api controller...");
 					controller = new ApiController();
 				}
+				
+				else {
+					render_404(request, response);
+					return;
+				}
 			}
 			
-			controller.invoke(actionName, request, response);
+			if (!controller.invoke(actionName, request, response)) {
+				render_404(request, response);
+			}
 		}
 		
 		catch (Exception e) {

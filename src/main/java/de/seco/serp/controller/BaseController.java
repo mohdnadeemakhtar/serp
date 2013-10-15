@@ -2,8 +2,12 @@ package de.seco.serp.controller;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -14,17 +18,33 @@ public class BaseController {
 
 	HttpServletRequest request;
 	HttpServletResponse response;
+	HttpSession session;
 	
 	// invoke controller action via reflection
-	public void invoke (final String methodName, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public boolean invoke (final String methodName, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String className = this.getClass().getCanonicalName();
 		Class c = Class.forName(className);
 		//Method method = c.getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
-		Method method = c.getMethod(methodName);
+		
+		Method method;
+		
+		try {
+			method = c.getMethod(methodName);
+		}
+		catch (Exception e) {
+			return false;
+		}
+		
+		// check if public
+		if (!Modifier.isPublic(method.getModifiers())) {
+			return false;
+		}
 		
 		this.request = request;
 		this.response = response;
+		this.session = request.getSession();
 		method.invoke(this);
+		return true;
 	}
 	
 	public boolean renderAsJSON (Object value) throws Exception {
