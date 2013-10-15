@@ -28,7 +28,11 @@ public class MainServlet extends HttpServlet {
 			String actionName = "";
 			
 			if (uriParts.length < 2) {
-				System.out.println ("unknown action: " + requestUri);
+				System.out.println ("non-api: " + requestUri);
+				request.getRequestDispatcher("login.jsp").forward(request, response);
+//				PrintWriter out = response.getWriter(); 
+//				out.write("test");
+//				out.close();
 				return;
 			}
 			else {
