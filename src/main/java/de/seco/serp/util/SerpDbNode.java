@@ -45,7 +45,7 @@ public class SerpDbNode {
 	}
 	
 	private void setPropertyDefaultValue(String propertyName) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -64,9 +64,16 @@ public class SerpDbNode {
 		}
 		
 		SerpDbPropertyDefinition propertyDefinition = this.definition.getPropertyDefinition(key);
-		
-		
-		
+		Object propertyValue = new Object();
+		Class type = propertyDefinition.getType();
+		if(type.equals(String.class)){
+			propertyValue = value;
+		} else if(type.equals(Integer.class)){
+			propertyValue = Integer.parseInt(value);
+		} else if(type.equals(Boolean.class)){
+			propertyValue = Boolean.parseBoolean(value);
+		} 
+		this.properties.put(key, propertyValue);
 		return true;
 	}
 	

@@ -6,7 +6,7 @@ public class SerpDbPropertyDefinition {
 	String displayLabel;
 	//TODO: change to real data types
 	Class type; 
-	String defaultValue;
+	Object defaultValue;
 	boolean required;
 	
 	
@@ -33,8 +33,7 @@ public class SerpDbPropertyDefinition {
 		}
 		JsonNode defaultValueNode = jsonNode.get("default");
 		if(defaultValueNode != null){
-			this.defaultValue = defaultValueNode.getTextValue();
-			System.out.println("class: "+defaultValueNode.getClass());
+			this.setDefaultValue(defaultValueNode);
 		}
 		
 		JsonNode requiredNode = jsonNode.get("required");
@@ -74,8 +73,27 @@ public class SerpDbPropertyDefinition {
 	}
 
 	public boolean hasDefault() {
-		// TODO Auto-generated method stub
+		
 		return (this.defaultValue != null);
+	}
+
+	private void setDefaultValue(JsonNode defaultValueNode){
+		if(this.type.equals(String.class)){
+			this.defaultValue = defaultValueNode.getTextValue();
+		} else if (this.type.equals(Integer.class)){
+			this.defaultValue = defaultValueNode.getIntValue();
+		} else if (this.type.equals(Boolean.class)){
+			this.defaultValue = defaultValueNode.getBooleanValue();
+		}
+	}
+	
+	public Object getDefaultValue(){
+		return this.defaultValue;
+	}
+	
+	public Class getType() {
+		
+		return this.type;
 	}
 	
 //	public String toString(){
