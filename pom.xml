@@ -38,6 +38,9 @@
                 <!-- <scanTargets>
                   <scanTarget>src</scanTarget>
                 </scanTargets> -->
+                <webAppConfig>
+                     <defaultsDescriptor>src/main/webdefault.xml</defaultsDescriptor> <!-- fix locked files problem, see http://wiki.eclipse.org/Jetty/Howto/Deal_with_Locked_Windows_Files  -->
+                </webAppConfig>
             </configuration>
         </plugin>
 

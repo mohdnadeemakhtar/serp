@@ -29,7 +29,7 @@ public class MainServlet extends HttpServlet {
 			
 			if (uriParts.length < 2) {
 				System.out.println ("non-api: " + requestUri);
-				request.getRequestDispatcher("login.jsp").forward(request, response);
+				request.getRequestDispatcher("views/login.jsp").forward(request, response);
 //				PrintWriter out = response.getWriter(); 
 //				out.write("test");
 //				out.close();
