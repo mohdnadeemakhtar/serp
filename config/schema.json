@@ -5,15 +5,20 @@
 					"properties": {
 						"first_name": {
 							"display_label":"first_name",
-							"default":"",
+						    "default" : "testVorname",
 							"type": "String",
-							"required": "false"
+							"required": true
 						},
 						"last_name": {
 							"display_label":"last_name",
-							"default":"SDSDSD",
+							"default":"",
 							"type":"String",
-							"required":"false"
+							"required":true
+						},
+						"age": {
+							"display_label":"age",
+							"type":"Integer",
+							
 						}
 					}
 			},
@@ -23,7 +28,7 @@
 				"properties": {
 					"name": {
 						"display_label":"name",
-						"default":"JAVA",
+						"default":"",
 						"type":"String",
 						"required":"true"
 					}
@@ -32,11 +37,8 @@
 			
 		 },
 	"relationship-types" : {
-		"person_has_skill":	{	
+		"has":	{	
 			"display_label":"hat",
-			"node1":"Person",
-			"node2":"Skill",
-			"directed":"true",
 			"properties": {
 				"since_when": {
 						"display_label":"seit",

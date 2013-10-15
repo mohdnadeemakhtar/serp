@@ -1,5 +1,6 @@
 package de.seco.serp.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -7,11 +8,11 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 
 public class SerpDbNodeDefinition {
-	HashMap<String, SerpDbPropertyDefintion> properties;
+	HashMap<String, SerpDbPropertyDefinition> properties;
 	String displayLabel;
 	
 	public SerpDbNodeDefinition(JsonNode node){
-		this.properties = new HashMap<String, SerpDbPropertyDefintion>();
+		this.properties = new HashMap<String, SerpDbPropertyDefinition>();
 		this.displayLabel = null;
 		
 		addDisplayLabel(node.get("display_label"));
@@ -27,11 +28,7 @@ public class SerpDbNodeDefinition {
 		while ( iterator.hasNext() ){
 			Map.Entry<String, String> keyAndValue = iterator.next();
 			
-			if(!this.properties.containsKey(keyAndValue.getKey())){
-				return false;
-			}
-			SerpDbPropertyDefintion propertyDefinition = this.properties.get(keyAndValue.getKey());
-			if(!propertyDefinition.validateValue(keyAndValue.getValue())){
+			if(! this.validateProperty(keyAndValue.getKey(), keyAndValue.getValue())){
 				return false;
 			}
 			
@@ -39,6 +36,19 @@ public class SerpDbNodeDefinition {
 		return true;
 	}
 	
+	public boolean validateProperty(String key, String value){
+		
+		if(!this.properties.containsKey(key)){
+			return false;
+		}
+		SerpDbPropertyDefinition propertyDefinition = this.properties.get(key);
+		if(!propertyDefinition.validateValue(value)){
+			return false;
+		}
+		
+		
+		return true;
+	}
 	
 	private boolean addDisplayLabel(JsonNode displayLabelNode){
 		if(displayLabelNode != null){
@@ -53,14 +63,14 @@ public class SerpDbNodeDefinition {
 		while (nodeIterator.hasNext()){
 			Map.Entry<String, JsonNode> propertyWithKey = nodeIterator.next();
 			String key = propertyWithKey.getKey();
-			SerpDbPropertyDefintion propertyDefinition = new SerpDbPropertyDefintion(propertyWithKey.getValue());
+			SerpDbPropertyDefinition propertyDefinition = new SerpDbPropertyDefinition(propertyWithKey.getValue());
 			addPropertyToNode(key, propertyDefinition);
 		}
 		return true;
 	}
 	
 	
-	private boolean addPropertyToNode(final String key, final SerpDbPropertyDefintion propertyDefinition){
+	private boolean addPropertyToNode(final String key, final SerpDbPropertyDefinition propertyDefinition){
 		Object obj = this.properties.get(key);
 		if (obj != null){
 			System.out.println("Property already exists");
@@ -70,6 +80,27 @@ public class SerpDbNodeDefinition {
 		return true;
 	}
 	
+	public SerpDbPropertyDefinition getPropertyDefinition(String key){
+		if(!this.properties.containsKey(key)){
+			System.out.println("Property definition not found");
+			return null;
+		}
+		
+		return this.properties.get(key);
+	}
+
+
+	public ArrayList<String> getRequiredProperties() {
+		ArrayList<String> requiredProperties = new ArrayList<String>();
+		for (Map.Entry<String, SerpDbPropertyDefinition> property : this.properties.entrySet()) {
+			String key = property.getKey();
+			SerpDbPropertyDefinition value = property.getValue();
+			if(value.isRequired()){
+				requiredProperties.add(key);
+			}
+		}
+		return null;
+	}
 	
 	
 //	public String toString(){

@@ -24,7 +24,7 @@ public class SerpDbSchemaDefinition {
 		this.initialized = false;
 	}
 	
-	static public SerpDbSchemaDefinition getInstance(){
+	public static SerpDbSchemaDefinition getInstance(){
 		if(instance == null){
 			instance = new SerpDbSchemaDefinition();
 		}

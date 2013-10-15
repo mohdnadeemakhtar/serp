@@ -11,7 +11,7 @@ import org.neo4j.graphdb.Transaction;
 
 import de.seco.serp.DataSource;
 import de.seco.serp.util.SerpDbNodeDefinition;
-import de.seco.serp.util.SerpDbPropertyDefintion;
+import de.seco.serp.util.SerpDbPropertyDefinition;
 import de.seco.serp.util.SerpDbRelationshipDefinition;
 import de.seco.serp.util.SerpDbSchemaDefinition;
 

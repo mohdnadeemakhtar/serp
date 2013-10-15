@@ -7,14 +7,14 @@ import java.util.Map;
 import org.codehaus.jackson.JsonNode;
 
 public class SerpDbRelationshipDefinition {
-	HashMap<String, SerpDbPropertyDefintion> properties;
+	HashMap<String, SerpDbPropertyDefinition> properties;
 	String displayLabel;
 	String node1;
 	String node2;
 	String directed;
 	
 	public SerpDbRelationshipDefinition(JsonNode node) {
-		this.properties = new HashMap<String, SerpDbPropertyDefintion>();
+		this.properties = new HashMap<String, SerpDbPropertyDefinition>();
 		this.displayLabel = null;
 		
 		addDisplayLabel(node.get("display_label"));
@@ -42,7 +42,7 @@ public class SerpDbRelationshipDefinition {
 		while (nodeIterator.hasNext()){
 			Map.Entry<String, JsonNode> propertyWithKey = nodeIterator.next();
 			String key = propertyWithKey.getKey();
-			SerpDbPropertyDefintion propertyDefinition = new SerpDbPropertyDefintion(propertyWithKey.getValue());
+			SerpDbPropertyDefinition propertyDefinition = new SerpDbPropertyDefinition(propertyWithKey.getValue());
 			addPropertyToRelationship(key, propertyDefinition);
 		}
 		return true;
@@ -55,7 +55,7 @@ public class SerpDbRelationshipDefinition {
 		return true;
 	}
 	
-	private Boolean addPropertyToRelationship(final String key, final SerpDbPropertyDefintion propertyDefinition){
+	private Boolean addPropertyToRelationship(final String key, final SerpDbPropertyDefinition propertyDefinition){
 		Object obj = this.properties.get(key);
 		if (obj != null){
 			System.out.println("Property already exists");
