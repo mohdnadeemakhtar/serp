@@ -65,6 +65,9 @@ public class SerpDbRelationshipDefinition {
 		return true;
 	}
 	
+	public HashMap<String, SerpDbPropertyDefinition> getProperties(){
+		return this.properties;
+	}
 //	public String toString(){
 //		return "\nrelationship: "+this.node1+"--"+this.displayLabel+"--"+this.node2+"\nproperties:"+this.properties+"\n";	
 //	}

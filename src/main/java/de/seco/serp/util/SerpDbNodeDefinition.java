@@ -102,7 +102,9 @@ public class SerpDbNodeDefinition {
 		return null;
 	}
 	
-	
+	public HashMap<String, SerpDbPropertyDefinition> getProperties(){
+		return this.properties;
+	}
 //	public String toString(){
 //		return "\nnode: displayLabel:"+displayLabel+"\nproperties:"+properties+"\n";
 //	}

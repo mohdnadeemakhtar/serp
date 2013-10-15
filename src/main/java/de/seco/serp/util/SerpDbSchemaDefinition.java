@@ -124,6 +124,15 @@ public class SerpDbSchemaDefinition {
 		return true;
 	}
 	
+	public HashMap<String, SerpDbNodeDefinition> getNodes(){
+		return this.nodes;
+	}
+	
+	public HashMap<String, SerpDbRelationshipDefinition> getRelationships(){
+		return this.relationships;
+	}
+	
+	
 //	public String toString(){
 //		return "\nnodes: "+this.nodes+"\nrelationships:"+this.relationships+"\n"+"initialized:"+this.initialized+"\n";	
 //	}
