@@ -1,13 +1,21 @@
 <!DOCTYPE>
 <html>
 <head>
-	<script src="js/lib/jquery-1.10.2.min.js"></script>
-	<script src="js/lib/underscore-min.js"></script>
-	<script src="js/lib/backbone-min.js"></script>
+	<script id="create-node-template" type="text/template"><%@ include file="/templates/_create-node-template.jsp" %></script>
 	
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script src="/js/lib/jquery-1.10.2.min.js"></script>
+	<script src="/js/lib/underscore-min.js"></script>
+	<script src="/js/lib/backbone-min.js"></script>
+	
+	<script src="/js/serp.js"></script>
+	<script src="/js/view/create_node_view.js"></script>
+	<script src="/js/main_page.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+	
 </head>
+
 <body class="main_page">
-	<h1>Haupt-Seite</h1>
+	<h1>Hauptseite</h1>
 </body>
 </html>

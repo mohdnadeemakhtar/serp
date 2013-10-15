@@ -45,3 +45,28 @@
 .login_box_row label {
 	display: block;
 }
+
+
+
+
+.create_node {
+	display: table;
+	padding: 5px;
+}
+
+
+.create_node_row  {
+	display: table-row;
+}
+
+.create_node_row > * {
+	display: table-cell;
+}
+
+.create_node_row > label {
+	padding-right: 10px; 
+}
+
+.create_node_properties {
+	padding-left: 15px;
+}

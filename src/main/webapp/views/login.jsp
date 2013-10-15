@@ -1,14 +1,14 @@
 <!DOCTYPE>
 <html>
 <head>
-	<script src="js/lib/jquery-1.10.2.min.js"></script>
-	<script src="js/lib/underscore-min.js"></script>
-	<script src="js/lib/backbone-min.js"></script>
+	<script src="/js/lib/jquery-1.10.2.min.js"></script>
+	<script src="/js/lib/underscore-min.js"></script>
+	<script src="/js/lib/backbone-min.js"></script>
 	
-	<script src="js/serp.js"></script>
-	<script src="js/landing_page.js"></script>
+	<script src="/js/serp.js"></script>
+	<script src="/js/landing_page.js"></script>
 	
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
 </head>
 <body class="login_page">
 	
