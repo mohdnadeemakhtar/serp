@@ -4,10 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
+
+import de.seco.serp.DataSource;
+
 public class SerpDbNode {
 	HashMap<String, Object> properties;
 	String label;
 	SerpDbNodeDefinition definition;
+	long id;
 	
 	public SerpDbNode(String label, HashMap<String, String> properties){
 		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
@@ -44,8 +51,13 @@ public class SerpDbNode {
 		
 	}
 	
+	public long getId(){
+		return this.id;
+	}
+	
 	private void setPropertyDefaultValue(String propertyName) {
-		
+		SerpDbPropertyDefinition propertyDefinition = this.definition.getPropertyDefinition(propertyName);
+		this.properties.put(propertyName, propertyDefinition.getDefaultValue());
 		
 	}
 
@@ -75,6 +87,32 @@ public class SerpDbNode {
 		} 
 		this.properties.put(key, propertyValue);
 		return true;
+	}
+
+	public Node create() {
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
+		Transaction tx = graphDb.beginTx();
+		Node node;
+		
+		try {
+			node = graphDb.createNode();
+			
+			for (Map.Entry<String, Object> prop : properties.entrySet()) {
+				node.setProperty (prop.getKey(), prop.getValue());
+			}
+			
+			tx.success();
+		}
+		catch (Exception e) {
+			System.out.println("cannot create node: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			tx.finish();
+		}
+		this.id = node.getId();
+		return node;
 	}
 	
 }

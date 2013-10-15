@@ -44,7 +44,7 @@ public class SerpDbPropertyDefinition {
 	}
 	
 	public boolean validateValue(String value){
-//		TODO: validate value with datatype, required ...
+
 		System.out.println("validate Value: type:"+type);
 		if(this.type.equals(String.class)){
 			System.out.println("String class");

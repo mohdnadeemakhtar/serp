@@ -14,11 +14,8 @@ public class SerpDbNodeDefinition {
 	public SerpDbNodeDefinition(JsonNode node){
 		this.properties = new HashMap<String, SerpDbPropertyDefinition>();
 		this.displayLabel = null;
-		
-		addDisplayLabel(node.get("display_label"));
-		
-		addPropertyDefinitions(node.get("properties"));
-		
+		addDisplayLabel(node.get("display_label"));	
+		addPropertyDefinitions(node.get("properties"));		
 	}
 	
 	
@@ -36,6 +33,8 @@ public class SerpDbNodeDefinition {
 				requiredProperties.remove(keyAndValue.getKey());
 			}
 		}
+		requiredProperties.removeAll(this.getPropertiesWithDefaultValue());
+
 		if(requiredProperties.size() > 0){
 			ArrayList<String> propertiesWithDefaultValue = this.getPropertiesWithDefaultValue();
 		
@@ -115,7 +114,7 @@ public class SerpDbNodeDefinition {
 				requiredProperties.add(key);
 			}
 		}
-		return null;
+		return requiredProperties;
 	}
 	
 	public ArrayList<String> getPropertiesWithDefaultValue() {
@@ -127,16 +126,13 @@ public class SerpDbNodeDefinition {
 				propertiesWithDefaultValue.add(key);
 			}
 		}
-		return null;
+		return propertiesWithDefaultValue;
 	}
 	
+
 	public HashMap<String, SerpDbPropertyDefinition> getProperties(){
 		return this.properties;
 	}
 	
-	
-//	public String toString(){
-//		return "\nnode: displayLabel:"+displayLabel+"\nproperties:"+properties+"\n";
-//	}
 
 }

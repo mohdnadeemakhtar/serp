@@ -1,5 +1,6 @@
 package de.seco.serp.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,9 +10,7 @@ import org.codehaus.jackson.JsonNode;
 public class SerpDbRelationshipDefinition {
 	HashMap<String, SerpDbPropertyDefinition> properties;
 	String displayLabel;
-	String node1;
-	String node2;
-	String directed;
+
 	
 	public SerpDbRelationshipDefinition(JsonNode node) {
 		this.properties = new HashMap<String, SerpDbPropertyDefinition>();
@@ -20,24 +19,54 @@ public class SerpDbRelationshipDefinition {
 		addDisplayLabel(node.get("display_label"));
 		
 		addPropertyDefinitions(node.get("properties"));
-		
-		JsonNode directedNode = node.get("directed");
-		JsonNode node1Node = node.get("node1");
-		JsonNode node2Node = node.get("node2");
-		
-		if(node1Node != null){
-			this.node1 = node1Node.getTextValue();
-		}
-		if(node2Node != null){
-			this.node2 = node2Node.getTextValue();
-		}
-		if(directedNode != null){
-			this.directed = directedNode.getTextValue();
-		}
-		
+
 	}
 	
-	private Boolean addPropertyDefinitions(JsonNode propertiesRootNode){
+	public boolean validateProperties(HashMap<String,String> properties){
+		
+		ArrayList<String> requiredProperties = this.getRequiredProperties();
+		Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator();
+		while ( iterator.hasNext() ){
+			Map.Entry<String, String> keyAndValue = iterator.next();
+			
+			if(! this.validateProperty(keyAndValue.getKey(), keyAndValue.getValue())){
+				return false;
+			}
+			if(requiredProperties.contains(keyAndValue.getKey())){
+				requiredProperties.remove(keyAndValue.getKey());
+			}
+		}
+		if(requiredProperties.size() > 0){
+			ArrayList<String> propertiesWithDefaultValue = this.getPropertiesWithDefaultValue();
+		
+			for(String requiredProperty : requiredProperties){
+				if(propertiesWithDefaultValue.contains(requiredProperty)){
+					requiredProperties.remove(requiredProperty);
+				}
+			}
+			if(requiredProperties.size() > 0 ){
+				System.out.println("not all required properties set");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean validateProperty(String key, String value){
+		
+		if(!this.properties.containsKey(key)){
+			return false;
+		}
+		
+		SerpDbPropertyDefinition propertyDefinition = this.properties.get(key);
+		if(!propertyDefinition.validateValue(value)){
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean addPropertyDefinitions(JsonNode propertiesRootNode){
 		Iterator<Map.Entry<String, JsonNode>> nodeIterator = propertiesRootNode.getFields();
 		while (nodeIterator.hasNext()){
 			Map.Entry<String, JsonNode> propertyWithKey = nodeIterator.next();
@@ -48,14 +77,14 @@ public class SerpDbRelationshipDefinition {
 		return true;
 	}
 	
-	private Boolean addDisplayLabel(JsonNode displayLabelNode){
+	private boolean addDisplayLabel(JsonNode displayLabelNode){
 		if(displayLabelNode != null){
 			this.displayLabel = displayLabelNode.getTextValue();
 		}
 		return true;
 	}
 	
-	private Boolean addPropertyToRelationship(final String key, final SerpDbPropertyDefinition propertyDefinition){
+	private boolean addPropertyToRelationship(final String key, final SerpDbPropertyDefinition propertyDefinition){
 		Object obj = this.properties.get(key);
 		if (obj != null){
 			System.out.println("Property already exists");
@@ -65,10 +94,41 @@ public class SerpDbRelationshipDefinition {
 		return true;
 	}
 	
+	public SerpDbPropertyDefinition getPropertyDefinition(String key){
+		if(!this.properties.containsKey(key)){
+			System.out.println("Property definition not found");
+			return null;
+		}
+		
+		return this.properties.get(key);
+	}
+
+
+	public ArrayList<String> getRequiredProperties() {
+		ArrayList<String> requiredProperties = new ArrayList<String>();
+		for (Map.Entry<String, SerpDbPropertyDefinition> property : this.properties.entrySet()) {
+			String key = property.getKey();
+			SerpDbPropertyDefinition value = property.getValue();
+			if(value.isRequired()){
+				requiredProperties.add(key);
+			}
+		}
+		return requiredProperties;
+	}
+	
+	public ArrayList<String> getPropertiesWithDefaultValue() {
+		ArrayList<String> propertiesWithDefaultValue = new ArrayList<String>();
+		for (Map.Entry<String, SerpDbPropertyDefinition> property : this.properties.entrySet()) {
+			String key = property.getKey();
+			SerpDbPropertyDefinition value = property.getValue();
+			if(value.hasDefault()){
+				propertiesWithDefaultValue.add(key);
+			}
+		}
+		return propertiesWithDefaultValue;
+	}
+	
 	public HashMap<String, SerpDbPropertyDefinition> getProperties(){
 		return this.properties;
 	}
-//	public String toString(){
-//		return "\nrelationship: "+this.node1+"--"+this.displayLabel+"--"+this.node2+"\nproperties:"+this.properties+"\n";	
-//	}
 }
