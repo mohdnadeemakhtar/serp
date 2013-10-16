@@ -57,3 +57,7 @@ serp.login = function (username, password) {
 		password: password
 	});
 }
+
+serp.logout = function () {
+	return $.post ("/logout");
+}

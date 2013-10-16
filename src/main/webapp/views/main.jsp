@@ -25,6 +25,10 @@
 </head>
 
 <body class="main_page">
+	<div style="text-align: right;">
+		<span class="logout_button">Logout</span>
+	</div>
+	
 	<h1>SERP</h1>
 
 	<div id="create_node_box" class="box"></div>
