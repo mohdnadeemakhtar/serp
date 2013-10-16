@@ -12,6 +12,10 @@ public class SerpDbRelationshipDefinition {
 	String displayLabel;
 
 	
+	public String getDisplayLabel() {
+		return displayLabel;
+	}
+
 	public SerpDbRelationshipDefinition(JsonNode node) {
 		this.properties = new HashMap<String, SerpDbPropertyDefinition>();
 		this.displayLabel = null;

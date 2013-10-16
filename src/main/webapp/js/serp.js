@@ -9,6 +9,15 @@ _.templateSettings = {
 	evaluate : /\{\{(.+?)\}\}/g
 };
 
+Backbone.View.prototype.close = function() {
+	if (this.beforeClose) {
+		this.beforeClose();
+	}
+	this.undelegateEvents();
+	this.remove();
+	this.unbind();
+};
+
 /**
  * get (cached) template
  * @param templateName

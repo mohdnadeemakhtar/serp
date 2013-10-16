@@ -20,6 +20,7 @@ import de.seco.serp.services.GraphDBService;
 import de.seco.serp.util.SerpDbNode;
 import de.seco.serp.util.SerpDbNodeDefinition;
 import de.seco.serp.util.SerpDbPropertyDefinition;
+import de.seco.serp.util.SerpDbRelationshipDefinition;
 import de.seco.serp.util.SerpDbSchemaDefinition;
 
 public class ApiController extends BaseController {
@@ -185,6 +186,26 @@ public class ApiController extends BaseController {
 		
 		render(nodes, "json");
 		
+		
+	}
+	
+	
+	public void getRelationshipTypeList () {
+		 SerpDbSchemaDefinition serpDbDef = SerpDbSchemaDefinition.getInstance();
+		 HashMap<String, SerpDbRelationshipDefinition> relDefs = serpDbDef.getRelationships();
+		
+		ArrayList< HashMap<String, String> > resultList = new ArrayList<HashMap<String, String> >();
+		
+		for (Map.Entry<String, SerpDbRelationshipDefinition> relDef :  relDefs.entrySet()) {
+			
+		 	HashMap<String, String> map = new HashMap<String, String>();
+		 	map.put("name",relDef.getKey());
+		 	map.put("label", relDef.getValue().getDisplayLabel());
+			
+		 	resultList.add(map);
+		 }
+		
+		render(resultList, "json");
 		
 	}
 
