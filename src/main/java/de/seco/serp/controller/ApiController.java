@@ -20,6 +20,7 @@ import de.seco.serp.services.GraphDBService;
 import de.seco.serp.util.SerpDbNode;
 import de.seco.serp.util.SerpDbNodeDefinition;
 import de.seco.serp.util.SerpDbPropertyDefinition;
+import de.seco.serp.util.SerpDbRelationshipDefinition;
 import de.seco.serp.util.SerpDbSchemaDefinition;
 
 public class ApiController extends BaseController {
@@ -164,6 +165,31 @@ public class ApiController extends BaseController {
 			return;
 		}
 		HashMap<String, SerpDbPropertyDefinition> nodeProperties = nodeDef.getProperties();
+		
+		ArrayList< HashMap<String, String> > resultList = new ArrayList<HashMap<String, String> >();
+		
+		for (Map.Entry<String, SerpDbPropertyDefinition> it : nodeProperties.entrySet()) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("name", it.getKey());
+			map.put("label", it.getValue().getDisplayLabel());
+			resultList.add(map);
+		}
+		
+		render(resultList, "json");
+		
+	}
+	
+	public void getRelationshipPropertyList () {
+		String relationshipType = request.getParameter("relationshipType");
+		
+		SerpDbSchemaDefinition serpDbDef = SerpDbSchemaDefinition.getInstance();
+		SerpDbRelationshipDefinition relDef = serpDbDef.getRelationshipType(relationshipType);
+		if (relDef == null) {
+			response.setStatus(400);
+			render ("");
+			return;
+		}
+		HashMap<String, SerpDbPropertyDefinition> nodeProperties = relDef.getProperties();
 		
 		ArrayList< HashMap<String, String> > resultList = new ArrayList<HashMap<String, String> >();
 		
