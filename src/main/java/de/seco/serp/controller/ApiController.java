@@ -17,6 +17,7 @@ import org.neo4j.tooling.GlobalGraphOperations;
 
 import de.seco.serp.DataSource;
 import de.seco.serp.services.GraphDBService;
+import de.seco.serp.util.SerpDbNode;
 import de.seco.serp.util.SerpDbNodeDefinition;
 import de.seco.serp.util.SerpDbPropertyDefinition;
 import de.seco.serp.util.SerpDbSchemaDefinition;
@@ -49,7 +50,7 @@ public class ApiController extends BaseController {
 		try {
 			HashMap<String, String> properties = new ObjectMapper().readValue(request.getParameter("properties"), HashMap.class);
 			
-			Node node = (new GraphDBService()).createNode(type, properties);
+			SerpDbNode node = (new GraphDBService()).createNode(type, properties);
 			if (node == null) {
 				response.setStatus(400);
 				render("could not create node");
@@ -177,6 +178,14 @@ public class ApiController extends BaseController {
 		
 	}
 	
-	
+	public void getNodesByName(){
+		String nodeName = request.getParameter("nodeName");
+		
+		ArrayList<SerpDbNode> nodes = (new GraphDBService().getNodesByName(nodeName));
+		
+		render(nodes, "json");
+		
+		
+	}
 
 }

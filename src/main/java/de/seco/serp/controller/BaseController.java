@@ -11,6 +11,8 @@ import javax.servlet.http.HttpSession;
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import de.seco.serp.util.SerpDbNode;
+
 /*
  * Each controller must extend this
  */
@@ -48,6 +50,7 @@ public class BaseController {
 	}
 	
 	public boolean renderAsJSON (Object value) throws Exception {
+		
 		ObjectMapper mapper = new ObjectMapper();
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
@@ -11,14 +12,14 @@ import org.neo4j.graphdb.Transaction;
 import de.seco.serp.DataSource;
 
 public class SerpDbNode {
-	HashMap<String, Object> properties;
-	String label;
-	SerpDbNodeDefinition definition;
-	long id;
+	private HashMap<String, Object> properties;
+	private String name;
+	private SerpDbNodeDefinition definition;
+	private Long id;
 	
-	public SerpDbNode(String label, HashMap<String, String> properties){
+	public SerpDbNode(String name, HashMap<String, String> properties){
 		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
-		this.definition = schemaDefinition.getNodeType(label);
+		this.definition = schemaDefinition.getNodeType(name);
 		if(this.definition == null){
 			System.out.println("No valid node type");
 			
@@ -29,7 +30,7 @@ public class SerpDbNode {
 			System.out.println("Property validation failed");
 			return;
 		}
-		this.label = label;
+		this.name = name;
 		this.properties = new HashMap<String, Object>();
 		ArrayList<String> requiredProperties = this.definition.getRequiredProperties();
 		
@@ -51,8 +52,37 @@ public class SerpDbNode {
 		
 	}
 	
-	public long getId(){
+	public SerpDbNode(Node node) {
+		
+		String type = node.getLabels().iterator().next().name(); 
+		
+		this.name = type;
+		this.properties = new HashMap<String, Object>();
+		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
+		this.definition = schemaDefinition.getNodeType(type);
+		
+		for(Map.Entry<String, SerpDbPropertyDefinition> property: this.definition.getProperties().entrySet()){
+			String propertyName = property.getKey();
+			if(node.hasProperty(propertyName)){
+
+
+				this.properties.put(propertyName, node.getProperty(propertyName));
+				
+			}
+		}
+		this.id = node.getId();
+	}
+
+	public Long getId(){
 		return this.id;
+	}
+	
+	public HashMap<String, Object> getProperties(){
+		return this.properties;
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 	
 	private void setPropertyDefaultValue(String propertyName) {
@@ -89,13 +119,20 @@ public class SerpDbNode {
 		return true;
 	}
 
-	public Node create() {
+	public boolean save() {
 		GraphDatabaseService graphDb = DataSource.getGraphDb();
 		Transaction tx = graphDb.beginTx();
 		Node node;
 		
+		
 		try {
-			node = graphDb.createNode();
+			if (this.id != null){
+				node = graphDb.getNodeById(this.id);
+			} else {
+				node = graphDb.createNode();
+			}
+			
+			node.addLabel(DynamicLabel.label(this.name));
 			
 			for (Map.Entry<String, Object> prop : properties.entrySet()) {
 				node.setProperty (prop.getKey(), prop.getValue());
@@ -106,13 +143,42 @@ public class SerpDbNode {
 		catch (Exception e) {
 			System.out.println("cannot create node: " + e.getMessage());
 			e.printStackTrace();
-			return null;
+			return false;
 		}
 		finally {
 			tx.finish();
 		}
 		this.id = node.getId();
-		return node;
+		
+		return true;
 	}
+	
+	public boolean delete() {
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
+		Transaction tx = graphDb.beginTx();
+		Node node;
+		
+		try {
+			if(this.id != null){
+				node = graphDb.getNodeById(this.id);
+				node.delete();
+			}
+			tx.success();
+		}
+		catch (Exception e) {
+			System.out.println("cannot create node: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		finally {
+			tx.finish();
+		}
+		
+		return true;
+	}
+	
+//	public String toString(){
+//		return ""+this.name+""+this.id+""+this.properties+"";
+//	}
 	
 }

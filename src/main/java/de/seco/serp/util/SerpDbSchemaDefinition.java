@@ -36,7 +36,7 @@ public class SerpDbSchemaDefinition {
 		if(this.nodes.containsKey(type)){
 			return this.nodes.get(type);
 		}
-		
+		System.out.println("nodestype size:"+this.nodes.size());
 		return null;
 	}
 	
