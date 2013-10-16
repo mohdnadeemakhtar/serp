@@ -13,11 +13,11 @@ import org.neo4j.graphdb.Transaction;
 import de.seco.serp.DataSource;
 
 public class SerpDbRelationship {
-	HashMap<String, Object> properties;
-	String label;
-	long startNodeId;
-	long endNodeId;
-	SerpDbRelationshipDefinition definition;
+	private HashMap<String, Object> properties;
+	private String name;
+	private long startNodeId;
+	private long endNodeId;
+	private SerpDbRelationshipDefinition definition;
 	
 	public SerpDbRelationship(long startNodeId, long endNodeId, String label, HashMap<String, String> properties){
 		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
@@ -32,7 +32,7 @@ public class SerpDbRelationship {
 			System.out.println("Property validation failed");
 			return;
 		}
-		this.label = label;
+		this.name = label;
 		this.properties = new HashMap<String, Object>();
 		ArrayList<String> requiredProperties = this.definition.getRequiredProperties();
 		
@@ -56,6 +56,23 @@ public class SerpDbRelationship {
 		this.endNodeId = endNodeId;
 			
 	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public HashMap<String, Object> getProperties(){
+		return this.properties;
+	}
+	
+	public long getStartNodeId(){
+		return this.startNodeId;
+	}
+	
+	public long getEndNodeId(){
+		return this.endNodeId;
+	}
+	
 
 	private void setPropertyDefaultValue(String propertyName) {
 		SerpDbPropertyDefinition propertyDefinition = this.definition.getPropertyDefinition(propertyName);
@@ -105,7 +122,7 @@ public class SerpDbRelationship {
 				return null;
 			}
 			
-			Relationship relationship = node1.createRelationshipTo(node2, DynamicRelationshipType.withName(this.label));
+			Relationship relationship = node1.createRelationshipTo(node2, DynamicRelationshipType.withName(this.name));
 			for (Map.Entry<String, Object> prop : properties.entrySet()) {
 				relationship.setProperty (prop.getKey(), prop.getValue());
 			}
