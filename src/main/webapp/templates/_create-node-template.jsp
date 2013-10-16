@@ -31,7 +31,7 @@
 
 	<div class="create_node_section" style="width: 100%">
 		<div class="create_node_row">
-			<div class="create_node_content" style="text-align: right;">
+			<div class="create_node_content box_button_area" >
 				<div class="button" data-action="create">Erstellen</div>
 			</div>
 		</div>

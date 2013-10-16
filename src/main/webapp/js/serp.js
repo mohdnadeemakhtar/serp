@@ -1,4 +1,5 @@
 
+// Namespaces
 var serp = {};
 serp.view = {};
 

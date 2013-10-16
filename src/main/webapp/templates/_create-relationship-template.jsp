@@ -3,7 +3,6 @@
 	
 	<h3>Knoten 1</h3>
 	<div class="create_relationship_node" data-nr="1">
-		
 	</div>
 
 	<h3>Relation</h3>
@@ -13,6 +12,9 @@
 				<option value="{{=relationTypes[i].name}}">{{=relationTypes[i].label}}</option>
 			{{ } }}
 		</select>
+
+		<h4>Attribute</h4>
+		<div class="create_relationship_relation_properties"></div>
 	</div>
 	
 	<h3>Knoten 2</h3>
@@ -20,6 +22,8 @@
 		
 	</div>
 
-	<div class="button" data-action="create">Erstellen</div>
+	<div class="box_button_area">
+		<div class="button" data-action="create">Erstellen</div>
+	</div>
 	
 </div>

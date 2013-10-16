@@ -55,6 +55,11 @@
 	margin-right: 10px;
 }
 
+.box_button_area {
+	text-align: right;
+	padding-top: 10px;
+}
+
 .create_node {
 	display: inline-block;
 	padding: 5px;
@@ -80,4 +85,21 @@
 
 .create_node_properties {
 	padding-left: 15px;
+}
+
+
+.properties {
+	display: table;
+}
+
+.properties_row {
+	display: table-row;
+}
+
+.properties_row > * {
+	display: table-cell;
+}
+
+.properties_row > label {
+	padding-right: 5px;
 }
