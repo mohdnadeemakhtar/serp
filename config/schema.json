@@ -1,0 +1,57 @@
+{
+	"node-types": {
+		"person":{
+			"display_label": "Person",
+					"properties": {
+						"first_name": {
+							"display_label":"Vorname",
+						    "default" : "testVorname",
+							"type": "String",
+							"required": true
+						},
+						"last_name": {
+							"display_label":"Nachname",
+							"type":"String",
+							"required":true
+						},
+						"age": {
+							"display_label":"Alter",
+							"type":"Integer"
+							
+						}	
+					}
+			},
+	
+			"skill": {
+				"display_label":"Skill",
+				"properties": {
+					"name": {
+						"display_label":"Name",
+						"default":"",
+						"type":"String",
+						"required":true
+					}
+				}
+			}
+			
+		 },
+	"relationship-types" : {
+		"has":	{	
+			"display_label":"hat",
+			"properties": {
+				"since_when": {
+						"display_label":"seit",
+						"default":"1800",
+						"type":"String",
+						"required":false
+					},
+				"level": {
+						"display_label":"Level",
+						"default":"Experte",
+						"type":"String",
+						"required":false
+					}
+			}
+		}
+	}
+}

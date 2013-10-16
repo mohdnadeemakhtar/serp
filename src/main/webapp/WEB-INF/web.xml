@@ -1,0 +1,29 @@
+<web-app version="2.4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/j2ee" xsi:schemalocation="http:/java.sun.com/dtd/web-app_2_3.dtd">
+
+<!-- 	<init-param> -->
+<!-- 	  <param-name>useFileMappedBuffer</param-name> -->
+<!-- 	  <param-value>false</param-value> -->
+<!-- 	</init-param> -->
+	
+	<servlet>
+	   <servlet-name>MainServlet</servlet-name>
+	   <servlet-class>de.seco.serp.MainServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+	   <servlet-name>MainServlet</servlet-name>
+	   <url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>/js/*</url-pattern>
+	    <url-pattern>/css/*</url-pattern>
+	    <url-pattern>/images/*</url-pattern>
+	</servlet-mapping>
+	
+	<listener>
+		<listener-class>de.seco.serp.MainServletContextListener</listener-class> 
+	</listener>
+	
+</web-app>
