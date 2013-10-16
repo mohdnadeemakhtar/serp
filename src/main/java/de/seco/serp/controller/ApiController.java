@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
@@ -75,6 +76,7 @@ public class ApiController extends BaseController {
 			Relationship relationship = (new GraphDBService()).createRelationship(node1Id, node2Id, type, properties);
 			
 			if (relationship == null) {
+				response.setStatus(400);
 				render("could not create relation");
 			}
 			else {
@@ -82,6 +84,7 @@ public class ApiController extends BaseController {
 			}
 		}
 		catch (Exception e) {
+			response.setStatus(400);
 			e.printStackTrace();
 		}
 	}
@@ -94,10 +97,18 @@ public class ApiController extends BaseController {
 		try {
 			Iterable<Node> iter = GlobalGraphOperations.at(graphDb).getAllNodes();
 			
+			
 			out.append("<ul>");
 			
 			for (Node node : iter ) {
-				out.append("<li> Node " + node.getId() + ": keys: " + node.getPropertyKeys() + ", values: " + node.getPropertyValues()  + "</li>");
+				String labels = "";
+				Iterable<Label> labelIter = node.getLabels();
+				for (Label label : labelIter) {
+					System.out.println("label: " + label.name());
+					labels+= label.name()+", ";
+				}
+				
+				out.append("<li> Node " + labels + ", id: " + node.getId() + ": keys: " + node.getPropertyKeys() + ", values: " + node.getPropertyValues()  + "</li>");
 			}
 			
 			tx.success();
@@ -205,13 +216,17 @@ public class ApiController extends BaseController {
 	}
 	
 	public void getNodesByName(){
-		String nodeName = request.getParameter("nodeName");
+		String nodeName = request.getParameter("type");
 		
 		ArrayList<SerpDbNode> nodes = (new GraphDBService().getNodesByName(nodeName));
 		
 		render(nodes, "json");
 		
 		
+	}
+	
+	public void getNodesByType() {
+		getNodesByName();
 	}
 	
 	

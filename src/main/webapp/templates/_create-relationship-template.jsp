@@ -19,5 +19,7 @@
 	<div class="create_relationship_node" data-nr="2">
 		
 	</div>
+
+	<div class="button" data-action="create">Erstellen</div>
 	
 </div>
