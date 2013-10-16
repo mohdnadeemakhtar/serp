@@ -213,5 +213,25 @@ public class ApiController extends BaseController {
 		
 		
 	}
+	
+	
+	public void getRelationshipTypeList () {
+		 SerpDbSchemaDefinition serpDbDef = SerpDbSchemaDefinition.getInstance();
+		 HashMap<String, SerpDbRelationshipDefinition> relDefs = serpDbDef.getRelationships();
+		
+		ArrayList< HashMap<String, String> > resultList = new ArrayList<HashMap<String, String> >();
+		
+		for (Map.Entry<String, SerpDbRelationshipDefinition> relDef :  relDefs.entrySet()) {
+			
+		 	HashMap<String, String> map = new HashMap<String, String>();
+		 	map.put("name",relDef.getKey());
+		 	map.put("label", relDef.getValue().getDisplayLabel());
+			
+		 	resultList.add(map);
+		 }
+		
+		render(resultList, "json");
+		
+	}
 
 }
