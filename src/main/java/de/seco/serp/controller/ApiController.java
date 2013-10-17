@@ -106,6 +106,22 @@ public class ApiController extends BaseController {
 		}
 	}
 
+	public void deleteRelationship(){
+		try {
+			Long relationshipId = Long.parseLong(request.getParameter("relationshipId"));
+			
+			boolean success = (new GraphDBService().deleteRelationship(relationshipId));
+			
+			if(success) {
+				render("sucessfully deleted");
+			}
+			
+		} catch (Exception e){
+			response.setStatus(400);
+			e.printStackTrace();
+		}
+	}
+	
 	public void getNodeList(){
 		try {
 			 ArrayList<SerpDbNode> nodeList = (new GraphDBService()).getNodeList();

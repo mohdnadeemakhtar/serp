@@ -19,8 +19,8 @@ import de.seco.serp.exception.InvalidRelationshipDefinitionException;
 public class SerpDbRelationship {
 	private HashMap<String, Object> properties;
 	private String relationshipType;
-	private long startNodeId;
-	private long endNodeId;
+	private Long startNodeId;
+	private Long endNodeId;
 	private SerpDbRelationshipDefinition definition;
 	private Long id;
 	
@@ -136,11 +136,15 @@ public class SerpDbRelationship {
 		return this.properties;
 	}
 	
-	public long getStartNodeId(){
+	public Long getId(){
+		return this.id;
+	}
+	
+	public Long getStartNodeId(){
 		return this.startNodeId;
 	}
 	
-	public long getEndNodeId(){
+	public Long getEndNodeId(){
 		return this.endNodeId;
 	}
 	
