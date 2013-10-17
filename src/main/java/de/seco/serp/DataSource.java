@@ -7,23 +7,26 @@ public class DataSource {
 
 	private static GraphDatabaseService graphDb;
 
-	public final static String GRAPH_DB_PATH = "/SERP-graphdb";
-//	public final static String GRAPH_DB_PATH = "/Users/matthias/SERP-graphdb";
+//	public final static String GRAPH_DB_PATH = "/SERP-graphdb";
+	public final static String GRAPH_DB_PATH = "/Users/matthias/SERP-graphdb";
+//	public final static String GRAPH_DB_PATH = "/Users/matthias/neo4j-community-2.0.0-M05/data/graph.db";
 	
 	public static void initGraphDb () {
 		System.out.println("init graph database " + GRAPH_DB_PATH);
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( GRAPH_DB_PATH );
+		
 		registerShutdownHook( graphDb );
 	}
 	
-	private static void registerShutdownHook(GraphDatabaseService graphDb2) {
-		// TODO Auto-generated method stub
+	private static void registerShutdownHook(final GraphDatabaseService graphDb2) {
+		
 		 Runtime.getRuntime().addShutdownHook( new Thread()
 		    {
 		        @Override
 		        public void run()
 		        {
-		            graphDb.shutdown();
+		        	System.out.println("shutting down graph database...");
+		        	graphDb2.shutdown();
 		        }
 		    } );
 		

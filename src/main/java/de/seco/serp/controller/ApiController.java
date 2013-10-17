@@ -21,6 +21,7 @@ import de.seco.serp.services.GraphDBService;
 import de.seco.serp.util.SerpDbNode;
 import de.seco.serp.util.SerpDbNodeDefinition;
 import de.seco.serp.util.SerpDbPropertyDefinition;
+import de.seco.serp.util.SerpDbRelationship;
 import de.seco.serp.util.SerpDbRelationshipDefinition;
 import de.seco.serp.util.SerpDbSchemaDefinition;
 
@@ -67,13 +68,29 @@ public class ApiController extends BaseController {
 		}
 	}
 	
+	public void deleteNode(){
+		try {
+			Long nodeId = Long.parseLong(request.getParameter("nodeId"));
+			
+			boolean success = (new GraphDBService().deleteNode(nodeId));
+			
+			if(success) {
+				render("sucessfully deleted");
+			}
+			
+		} catch (Exception e){
+			response.setStatus(400);
+			e.printStackTrace();
+		}
+	}
+	
 	public void createRelationship () {
 		try {
 			Long node1Id = Long.parseLong(request.getParameter("node1Id"));
 			Long node2Id = Long.parseLong(request.getParameter("node2Id"));
 			String type = request.getParameter("type");
 			HashMap<String, String> properties = new ObjectMapper().readValue(request.getParameter("properties"), HashMap.class);
-			Relationship relationship = (new GraphDBService()).createRelationship(node1Id, node2Id, type, properties);
+			SerpDbRelationship relationship = (new GraphDBService()).createRelationship(node1Id, node2Id, type, properties);
 			
 			if (relationship == null) {
 				response.setStatus(400);
@@ -89,6 +106,28 @@ public class ApiController extends BaseController {
 		}
 	}
 
+	public void getNodeList(){
+		try {
+			 ArrayList<SerpDbNode> nodeList = (new GraphDBService()).getNodeList();
+			render(nodeList, "json");
+		}
+		catch (Exception e) {
+			response.setStatus(400);
+			e.printStackTrace();
+		}
+	}
+	
+	public void getRelationshipList(){
+		try {
+			 ArrayList<SerpDbRelationship> relationshipList = (new GraphDBService()).getRelationshipList();
+			render(relationshipList, "json");
+		}
+		catch (Exception e) {
+			response.setStatus(400);
+			e.printStackTrace();
+		}
+	}
+	
 	public void showAllNodes() {
 		GraphDatabaseService graphDb = DataSource.getGraphDb();
 		StringBuilder out = new StringBuilder();

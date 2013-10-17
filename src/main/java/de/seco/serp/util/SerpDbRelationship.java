@@ -6,22 +6,27 @@ import java.util.Map;
 
 import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 
 import de.seco.serp.DataSource;
+import de.seco.serp.exception.InvalidNodeDefinitionException;
+import de.seco.serp.exception.InvalidRelationshipDefinitionException;
 
 public class SerpDbRelationship {
 	private HashMap<String, Object> properties;
-	private String name;
+	private String relationshipType;
 	private long startNodeId;
 	private long endNodeId;
 	private SerpDbRelationshipDefinition definition;
+	private Long id;
 	
-	public SerpDbRelationship(long startNodeId, long endNodeId, String label, HashMap<String, String> properties){
+	public SerpDbRelationship(long startNodeId, long endNodeId, String relationshipType, HashMap<String, String> properties){
 		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
-		this.definition = schemaDefinition.getRelationshipType(label);
+		this.definition = schemaDefinition.getRelationshipType(relationshipType);
 		if(this.definition == null){
 			System.out.println("No valid node type");
 			
@@ -32,7 +37,7 @@ public class SerpDbRelationship {
 			System.out.println("Property validation failed");
 			return;
 		}
-		this.name = label;
+		this.relationshipType = relationshipType;
 		this.properties = new HashMap<String, Object>();
 		ArrayList<String> requiredProperties = this.definition.getRequiredProperties();
 		
@@ -57,8 +62,74 @@ public class SerpDbRelationship {
 			
 	}
 	
-	public String getName(){
-		return this.name;
+	public SerpDbRelationship(Long relationshipId, HashMap<String, String> properties) {
+		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
+		Relationship relationship = graphDb.getRelationshipById(relationshipId);
+		
+		this.relationshipType = relationship.getType().name();
+		
+		this.definition = schemaDefinition.getRelationshipType(relationshipType);
+		if(this.definition == null){
+			System.out.println("No valid node type");
+			
+			return;
+		}
+
+		if(!this.definition.validateProperties(properties)){
+			System.out.println("Property validation failed");
+			return;
+		}
+		
+		this.properties = new HashMap<String, Object>();
+		ArrayList<String> requiredProperties = this.definition.getRequiredProperties();
+		
+		for (Map.Entry<String, String> property : properties.entrySet()) {
+			String key = property.getKey();
+			String value = property.getValue();
+			this.setProperty(key, value);
+			if(requiredProperties.contains(key)){
+				requiredProperties.remove(key);
+			}
+			
+		}
+		
+//		set remaining required properties if they have a default value
+		for(String propertyName : requiredProperties){
+			this.setPropertyDefaultValue(propertyName);
+		}
+		
+		
+		this.startNodeId = relationship.getStartNode().getId();
+		this.endNodeId = relationship.getEndNode().getId();
+	}
+
+	public SerpDbRelationship(Relationship relationship) throws InvalidRelationshipDefinitionException {
+		try {
+			this.relationshipType = relationship.getType().name();
+			
+			this.properties = new HashMap<String, Object>();
+			SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
+			this.definition = schemaDefinition.getRelationshipType(this.relationshipType);
+			
+			for(Map.Entry<String, SerpDbPropertyDefinition> property: this.definition.getProperties().entrySet()){
+				String propertyName = property.getKey();
+				if(relationship.hasProperty(propertyName)){
+	
+					this.properties.put(propertyName, relationship.getProperty(propertyName));
+					
+				}
+			}
+			this.id = relationship.getId();
+			this.startNodeId = relationship.getStartNode().getId();
+			this.endNodeId = relationship.getEndNode().getId();
+		} catch(Exception e){
+			throw new InvalidRelationshipDefinitionException();
+		}
+	}
+
+	public String getRelationshipType(){
+		return this.relationshipType;
 	}
 	
 	public HashMap<String, Object> getProperties(){
@@ -100,43 +171,75 @@ public class SerpDbRelationship {
 		return true;
 	}
 	
-	public Relationship create(){
+	public boolean save(){
 		GraphDatabaseService graphDb = DataSource.getGraphDb();
-		Transaction tx = graphDb.beginTx();
+		
+
+		Node node1, node2;
+		try {
+			node1 = graphDb.getNodeById(this.startNodeId);
+		}
+		catch (Exception e) {
+			System.out.println("cannot find first node " + this.startNodeId);
+			return false;
+		}
 		
 		try {
-			
-			Node node1, node2;
-			try {
-				node1 = graphDb.getNodeById(this.startNodeId);
+			node2 = graphDb.getNodeById(this.endNodeId);
+		}
+		catch (Exception e) {
+			System.out.println("cannot find second node " + this.endNodeId);
+			return false;
+		}
+
+		try {
+			Relationship relationship;
+			if(this.id != null){
+				relationship = graphDb.getRelationshipById(this.id);
+			} else {
+				relationship = node1.createRelationshipTo(node2, DynamicRelationshipType.withName(this.relationshipType));
 			}
-			catch (Exception e) {
-				System.out.println("cannot find first node " + this.startNodeId);
-				return null;
-			}
-			try {
-				node2 = graphDb.getNodeById(this.endNodeId);
-			}
-			catch (Exception e) {
-				System.out.println("cannot find second node " + this.endNodeId);
-				return null;
-			}
-			
-			Relationship relationship = node1.createRelationshipTo(node2, DynamicRelationshipType.withName(this.name));
 			for (Map.Entry<String, Object> prop : properties.entrySet()) {
 				relationship.setProperty (prop.getKey(), prop.getValue());
 			}
-			tx.success();
-			return relationship;
-			
+		} catch(Exception e){
+			System.out.println("failed to create relationship");
+			return false;
 		}
-		catch (Exception e) {
-			System.out.println("could not create relationship: " + e.getMessage());
+		
+		
+		return true;
+	}
+
+	public static SerpDbRelationship getById(Long relationshipId) {
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
+		
+		Relationship relationship = graphDb.getRelationshipById(relationshipId);
+		SerpDbRelationship serpRelationship = null;
+		try {
+			serpRelationship = new SerpDbRelationship(relationship);
+		} catch (InvalidRelationshipDefinitionException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		}
-		finally {
-			tx.finish();
+		
+		return serpRelationship;
+	}
+
+	public boolean delete() {
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
+		Relationship relationship;
+		
+		try{
+			if(this.id != null){
+				relationship = graphDb.getRelationshipById(this.id);
+				
+	
+				relationship.delete();
+			}
+		} catch(Exception e){
+			return false;
 		}
+		return true;
 	}
 }

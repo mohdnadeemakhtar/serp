@@ -2,24 +2,30 @@ package de.seco.serp.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 
+
 import de.seco.serp.DataSource;
+import de.seco.serp.exception.InvalidNodeDefinitionException;
 
 public class SerpDbNode {
 	private HashMap<String, Object> properties;
-	private String name;
+	private String nodeType;
 	private SerpDbNodeDefinition definition;
 	private Long id;
 	
-	public SerpDbNode(String name, HashMap<String, String> properties){
+	public SerpDbNode(String nodeType, HashMap<String, String> properties){
 		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
-		this.definition = schemaDefinition.getNodeType(name);
+		this.definition = schemaDefinition.getNodeType(nodeType);
 		if(this.definition == null){
 			System.out.println("No valid node type");
 			
@@ -30,7 +36,7 @@ public class SerpDbNode {
 			System.out.println("Property validation failed");
 			return;
 		}
-		this.name = name;
+		this.nodeType = nodeType;
 		this.properties = new HashMap<String, Object>();
 		ArrayList<String> requiredProperties = this.definition.getRequiredProperties();
 		
@@ -52,19 +58,62 @@ public class SerpDbNode {
 		
 	}
 	
-	public SerpDbNode(Node node) {
+	
+	public SerpDbNode(Long id, HashMap<String, String> properties){
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
+
 		
-		String type = node.getLabels().iterator().next().name(); 
+		Node node = graphDb.getNodeById(id);
+
+		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
+		this.nodeType = node.getLabels().iterator().next().name();
+		this.definition = schemaDefinition.getNodeType(this.nodeType);
+		if(this.definition == null){
+			System.out.println("No valid node type");
+			
+			return;
+		}
+
+		if(!this.definition.validateProperties(properties)){
+			System.out.println("Property validation failed");
+			return;
+		}
 		
-		this.name = type;
+		this.properties = new HashMap<String, Object>();
+		ArrayList<String> requiredProperties = this.definition.getRequiredProperties();
+		
+		for (Map.Entry<String, String> property : properties.entrySet()) {
+			String key = property.getKey();
+			String value = property.getValue();
+			this.setProperty(key, value);
+			if(requiredProperties.contains(key)){
+				requiredProperties.remove(key);
+			}
+			
+		}
+		
+//		set remaining required properties if they have a default value
+		for(String propertyName : requiredProperties){
+			this.setPropertyDefaultValue(propertyName);
+		}
+		
+		
+	}
+	
+	public SerpDbNode(Node node) throws InvalidNodeDefinitionException {
+		ResourceIterator<Label> iterator = node.getLabels().iterator();
+		if (iterator.hasNext()){
+			this.nodeType = iterator.next().name();
+		} else {
+			this.nodeType = "";
+		}
 		this.properties = new HashMap<String, Object>();
 		SerpDbSchemaDefinition schemaDefinition = SerpDbSchemaDefinition.getInstance();
-		this.definition = schemaDefinition.getNodeType(type);
+		this.definition = schemaDefinition.getNodeType(this.nodeType);
 		
 		for(Map.Entry<String, SerpDbPropertyDefinition> property: this.definition.getProperties().entrySet()){
 			String propertyName = property.getKey();
 			if(node.hasProperty(propertyName)){
-
 
 				this.properties.put(propertyName, node.getProperty(propertyName));
 				
@@ -81,8 +130,8 @@ public class SerpDbNode {
 		return this.properties;
 	}
 	
-	public String getName(){
-		return this.name;
+	public String getNodeType(){
+		return this.nodeType;
 	}
 	
 	private void setPropertyDefaultValue(String propertyName) {
@@ -121,64 +170,53 @@ public class SerpDbNode {
 
 	public boolean save() {
 		GraphDatabaseService graphDb = DataSource.getGraphDb();
-		Transaction tx = graphDb.beginTx();
+
 		Node node;
 		
 		
-		try {
-			if (this.id != null){
-				node = graphDb.getNodeById(this.id);
-			} else {
-				node = graphDb.createNode();
-			}
-			
-			node.addLabel(DynamicLabel.label(this.name));
-			
-			for (Map.Entry<String, Object> prop : properties.entrySet()) {
-				node.setProperty (prop.getKey(), prop.getValue());
-			}
-			
-			tx.success();
+		if (this.id != null){
+			node = graphDb.getNodeById(this.id);
+		} else {
+			node = graphDb.createNode();
+			node.addLabel(DynamicLabel.label(this.nodeType));
+			this.id = node.getId();
 		}
-		catch (Exception e) {
-			System.out.println("cannot create node: " + e.getMessage());
-			e.printStackTrace();
-			return false;
+
+		for (Map.Entry<String, Object> prop : properties.entrySet()) {
+			node.setProperty (prop.getKey(), prop.getValue());
 		}
-		finally {
-			tx.finish();
-		}
-		this.id = node.getId();
-		
+	
 		return true;
 	}
 	
 	public boolean delete() {
 		GraphDatabaseService graphDb = DataSource.getGraphDb();
-		Transaction tx = graphDb.beginTx();
 		Node node;
-		
-		try {
-			if(this.id != null){
-				node = graphDb.getNodeById(this.id);
-				node.delete();
+		if(this.id != null){
+			node = graphDb.getNodeById(this.id);
+			
+//				delete all relationships of node to delete
+			for(Relationship rel : node.getRelationships()){
+				rel.delete();
 			}
-			tx.success();
+			node.delete();
 		}
-		catch (Exception e) {
-			System.out.println("cannot create node: " + e.getMessage());
-			e.printStackTrace();
-			return false;
-		}
-		finally {
-			tx.finish();
-		}
-		
 		return true;
 	}
 	
-//	public String toString(){
-//		return ""+this.name+""+this.id+""+this.properties+"";
-//	}
+	public static SerpDbNode getById(Long nodeId){
+		GraphDatabaseService graphDb = DataSource.getGraphDb();
+		
+		Node node = graphDb.getNodeById(nodeId);
+		SerpDbNode serpNode = null;
+		try {
+			serpNode = new SerpDbNode(node);
+		} catch (InvalidNodeDefinitionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return serpNode;
+	}
 	
 }
