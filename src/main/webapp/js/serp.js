@@ -33,6 +33,15 @@ serp.template = function(templateName, doRenderTemplateName) {
 	}
 	
 	if (!serp.TEMPLATE_CACHE[templateName]) {
+		
+		var request = new XMLHttpRequest();
+		request.open('GET', "/ajax/templates", false);  // `false` makes the request synchronous
+		request.send(null);
+		console.log("template done "+request.responseText);
+		$("body").append(request.responseText);
+		
+
+			
 		var templObj = jQuery('#' + templateName);
 		if (templObj.length === 0) {
 			throw "Hello, the template '" + templateName + "' was not found!";

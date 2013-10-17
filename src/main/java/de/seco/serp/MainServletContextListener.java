@@ -7,6 +7,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import de.seco.serp.util.SerpDbSchemaDefinition;
+import de.seco.serp.util.Templates;
 	
 public class MainServletContextListener implements ServletContextListener {
 
@@ -22,6 +23,10 @@ public class MainServletContextListener implements ServletContextListener {
 			System.out.println("could not init schema");
 			System.exit(1);
 		}
+		
+		Templates.TEMPLATE_PATH = sce.getServletContext().getRealPath("/templates");
+		System.out.println(Templates.allTemplates());
+		//System.out.println("template path: " + Templates.TEMPLATE_PATH);
 	}
 	
 	public void contextDestroyed(ServletContextEvent sce) {

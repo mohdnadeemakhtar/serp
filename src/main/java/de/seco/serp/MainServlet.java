@@ -68,6 +68,10 @@ public class MainServlet extends HttpServlet {
 					controller = new ApiController();
 				}
 				
+				else if (uriParts[0].equals("ajax")) {
+					controller = new AjaxController();
+				}
+				
 				else {
 					render_404(request, response);
 					return;
