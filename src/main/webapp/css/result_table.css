@@ -8,3 +8,7 @@
 	text-align: left;
 }
 
+.result_table td:active {
+	background: #DDDDDD;
+}
+

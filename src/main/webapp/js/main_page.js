@@ -44,6 +44,7 @@ $(document).ready(function() {
 			add:true
 		});
 
+
 		var resultRelationshipsCollection = new serp.model.ResultCollection;
 		var resultRelationshipsTableView = new serp.view.ResultTableView({
 			resultType: serp.model.RESULT_RELATIONSHIP,

@@ -12,6 +12,10 @@ serp.model.ResultModel = Backbone.Model.extend({
 		return this.get("type");
 	},
 
+	getProperties: function () {
+		return this.get("properties");
+	}
+
 });
 
 

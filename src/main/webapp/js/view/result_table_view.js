@@ -15,6 +15,14 @@ serp.view.ResultTableView = Backbone.View.extend({
 			throw "no result type";
 		}
 		this.resultType = options.resultType;
+		if (options.editable) {
+			this.editable = true;
+		}
+		else {
+			this.editable = false;
+		}
+
+
 		console.log("collection "+JSON.stringify(this.collection));
 		this.listenTo(this.collection, "add", this._addItem);
 		this.listenTo(this.collection, "reset", function () {console.log("reset")});
@@ -54,6 +62,10 @@ serp.view.ResultTableView = Backbone.View.extend({
 					getValue: function (model) {
 						return model.get("properties").age;
 					}
+				},
+				{
+					label: "Aktion",
+					getValue: function (model) { return ""}
 				}
 			];
 		}
