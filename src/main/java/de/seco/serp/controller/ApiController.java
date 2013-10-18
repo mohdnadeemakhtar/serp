@@ -27,20 +27,6 @@ import de.seco.serp.util.SerpDbSchemaDefinition;
 
 public class ApiController extends BaseController {
 	
-	public void testMethod() {
-		
-//		try {
-//			TimeUnit.MILLISECONDS.sleep(3000);
-//		}
-//		catch (Exception e) {};
-		
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("name", "Max Mustermann");
-		map.put("age", "123");
-		render(map, "json");
-	}
-	
-	
 	public void createNode() {
 		
 		String type = request.getParameter("type");

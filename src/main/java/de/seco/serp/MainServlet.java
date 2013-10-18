@@ -41,10 +41,12 @@ public class MainServlet extends HttpServlet {
 		
 		try {
 			
-			// Landing Page
+			// Page or Auth actions
 			if (uriParts.length == 1) {
 				actionName = uriParts[0];
 				System.out.println("action: '"+actionName+"'");
+
+				// Landing Page / Main Page
 				if (actionName.length() == 0) {
 					if (session.getAttribute("userId") == null) {
 						request.getRequestDispatcher("views/login.jsp").forward(request, response);
@@ -59,6 +61,7 @@ public class MainServlet extends HttpServlet {
 				controller = new AuthController();
 			}
 			
+			// Api, Ajax Controller
 			else {
 				actionName = uriParts[1];
 				
@@ -78,6 +81,7 @@ public class MainServlet extends HttpServlet {
 				}
 			}
 			
+			// invoke controller action
 			if (!controller.invoke(actionName, request, response)) {
 				render_404(request, response);
 			}

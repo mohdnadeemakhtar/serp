@@ -11,6 +11,7 @@ _.templateSettings = {
 	evaluate : /\{\{(.+?)\}\}/g
 };
 
+// add beforeClose
 Backbone.View.prototype.close = function() {
 	if (this.beforeClose) {
 		this.beforeClose();
@@ -37,6 +38,7 @@ serp.template = function (name) {
 	};
 }
 
+// load (currently all) templates via ajax
 serp.loadTemplates = function (success) {
 	$.get("/ajax/templates").done(function (response) {
 		for (templateName in response) {

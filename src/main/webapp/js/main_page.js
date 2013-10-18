@@ -1,6 +1,7 @@
 
 serp.data = {};
 
+// load global data
 serp.loadData = function (success) {
 	var step = _.after(2, success);
 	serp.data.nodeTypeCollection = new Backbone.Collection;
@@ -16,7 +17,7 @@ serp.loadData = function (success) {
 }
 
 
-// Init
+// Init Main Page
 
 $(document).ready(function() {
 	
@@ -55,8 +56,8 @@ $(document).ready(function() {
 		});
 	};
 
+	// load templates & initial data, then render views
 	var step = _.after(2, loadPage);
-
 	serp.loadTemplates(step);
 	serp.loadData(step);
 });

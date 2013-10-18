@@ -32,6 +32,9 @@
 	<div id="create_relationship_box" class="box"></div> 
 
 	<div style="height: 30px;"></div>
+
+	<h2>Tabellen (Test)</h2>
+
 	<div class="box">
 		<h2>Knoten</h2>
 		<div id="result_table_nodes_test" ></div>

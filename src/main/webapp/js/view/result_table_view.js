@@ -1,3 +1,9 @@
+/*
+	Table View that displays
+		- nodes of the same type
+		- relationships of the same type
+		- query results (not editable)
+*/
 
 serp.view.ResultTableView = Backbone.View.extend({
 
@@ -15,6 +21,8 @@ serp.view.ResultTableView = Backbone.View.extend({
 	},
 
 	render: function () {
+
+		// hard coded column description, to be replaced by dynamic one
 		if (this.resultType === serp.model.RESULT_NODE) {
 			this.columns = [
 				{
