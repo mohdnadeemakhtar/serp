@@ -39,10 +39,6 @@ public class ApiController extends BaseController {
 		render(map, "json");
 	}
 	
-	public void testMethod2() {
-		render("<html><body><h1>Test</h1></body></html>");
-	}
-	
 	
 	public void createNode() {
 		

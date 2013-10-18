@@ -1,20 +1,23 @@
 package de.seco.serp.util;
 
 import java.io.File;
-import java.io.FileReader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
-
 import org.apache.commons.io.FileUtils;
+
 
 public class Templates {
 
 	public static String TEMPLATE_PATH = null;
 	
-	public static String allTemplates() {
+	/*
+	 * returns map of templates
+	 */
+	public static HashMap<String, String> allTemplates() {
 		Iterator it = FileUtils.iterateFiles(new File(TEMPLATE_PATH), null, true);
 		
-		StringBuilder result = new StringBuilder();
+		HashMap<String, String> map = new HashMap<String, String> ();
 		
 		while (it.hasNext()) {
 			File file = (File) it.next();
@@ -29,12 +32,10 @@ public class Templates {
 				templateName = templateName.substring(0, extPos);
 			}
 			
-			System.out.println("template: " +  templateName);
-			
 			String code;
 			try {
 				code = new Scanner(file).useDelimiter("\\Z").next();
-				result.append("<script id=\"" + templateName + "\" type=\"text/template\" > \n" + code + "\n</script>");
+				map.put(templateName, code);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -42,7 +43,13 @@ public class Templates {
 			
 		}
 		
-		return result.toString();
+		try {
+			return map;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

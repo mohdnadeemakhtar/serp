@@ -25,8 +25,6 @@ public class MainServletContextListener implements ServletContextListener {
 		}
 		
 		Templates.TEMPLATE_PATH = sce.getServletContext().getRealPath("/templates");
-		System.out.println(Templates.allTemplates());
-		//System.out.println("template path: " + Templates.TEMPLATE_PATH);
 	}
 	
 	public void contextDestroyed(ServletContextEvent sce) {
