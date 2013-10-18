@@ -34,7 +34,9 @@ public class Templates {
 			
 			String code;
 			try {
-				code = new Scanner(file).useDelimiter("\\Z").next();
+				Scanner scanner =  new Scanner(file);
+				code = scanner.useDelimiter("\\Z").next();
+				scanner.close();
 				map.put(templateName, code);
 			}
 			catch (Exception e) {

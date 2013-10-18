@@ -8,7 +8,7 @@ public class DataSource {
 	private static GraphDatabaseService graphDb;
 
 //	public final static String GRAPH_DB_PATH = "/SERP-graphdb";
-	public final static String GRAPH_DB_PATH = "/Users/matthias/SERP-graphdb";
+	public static String GRAPH_DB_PATH ;
 //	public final static String GRAPH_DB_PATH = "/Users/matthias/neo4j-community-2.0.0-M05/data/graph.db";
 	
 	public static void initGraphDb () {

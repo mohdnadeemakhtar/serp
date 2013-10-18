@@ -2,6 +2,7 @@
 // Namespaces
 var serp = {};
 serp.view = {};
+serp.model = {};
 
 //change underscore.js template syntax to: {{=}} (interpolate variables) and {{}} (execute arbitrary JavaScript code)
 _.templateSettings = {
@@ -39,6 +40,7 @@ serp.template = function (name) {
 serp.loadTemplates = function (success) {
 	$.get("/ajax/templates").done(function (response) {
 		for (templateName in response) {
+			console.log("check "+templateName);
 			serp.TEMPLATE_CACHE[templateName] = _.template(response[templateName]);
 		}
 		success();

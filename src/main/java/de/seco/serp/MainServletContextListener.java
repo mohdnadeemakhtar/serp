@@ -14,10 +14,10 @@ public class MainServletContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		System.out.println ("SERP is starting...");
 		
-		String possibleGraphDbPath = (new File(sce.getServletContext().getRealPath("/"))).toPath().getRoot().toString() + "SERP-graphdb";
-		
-		System.out.println ("possibleGraphDbPath: " + possibleGraphDbPath);
-		//.getRealPath("/");
+//		String possibleGraphDbPath = (new File(sce.getServletContext().getRealPath("/"))).toPath().getRoot().toString() + "SERP-graphdb";
+//		
+//		System.out.println ("possibleGraphDbPath: " + possibleGraphDbPath);
+		DataSource.GRAPH_DB_PATH = (new File(sce.getServletContext().getRealPath("/"))).toPath().getRoot().toString() + "SERP-graphdb";
 		DataSource.initGraphDb();
 		if (!SerpDbSchemaDefinition.getInstance().initSchema()) {
 			System.out.println("could not init schema");

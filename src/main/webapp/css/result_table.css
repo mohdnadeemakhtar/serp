@@ -1,0 +1,10 @@
+.result_table {
+	border-collapse: collapse;
+}
+
+.result_table td {
+	border: 1px solid #CCCCCC;
+	padding: 5px;
+	text-align: left;
+}
+

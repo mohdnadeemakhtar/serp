@@ -1,4 +1,4 @@
-<!DOCTYPE>
+<!DOCTYPE HTML>
 <html>
 <head>
 	<script src="/js/lib/jquery-1.10.2.min.js"></script>

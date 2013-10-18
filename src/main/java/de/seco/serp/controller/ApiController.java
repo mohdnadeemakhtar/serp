@@ -201,19 +201,17 @@ public class ApiController extends BaseController {
 		SerpDbSchemaDefinition serpDbDef = SerpDbSchemaDefinition.getInstance();
 		HashMap<String, SerpDbNodeDefinition> nodeDefs = serpDbDef.getNodes();
 		
-		ArrayList< HashMap<String, String> > resultList = new ArrayList<HashMap<String, String> >();
+		ArrayList< HashMap<String, Object> > resultList = new ArrayList<HashMap<String, Object> >();
 		
 		for (Map.Entry<String, SerpDbNodeDefinition> nodeDef :  nodeDefs.entrySet()) {
-			
-			HashMap<String, String> map = new HashMap<String, String>();
+			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("name",nodeDef.getKey());
 			map.put("label", nodeDef.getValue().getDisplayLabel());
-			
+			map.put("properties", nodeDef.getValue().getProperties());
 			resultList.add(map);
 		}
 		
 		render(resultList, "json");
-		
 	}
 	
 	public void getNodePropertyList () {
